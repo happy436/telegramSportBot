@@ -1,0 +1,31 @@
+export const MEASUREMENTS = {
+	height: { value: "зріст", units: "см", param: "height" },
+	weight: { value: "вага", units: "кг", param: "weight" },
+	neck: { value: "шия", units: "см", param: "neck" },
+	shoulders: { value: "плечі", units: "см", param: "shoulders" },
+	leftBiceps: { value: "лівий біцепс", units: "см", param: "leftBiceps" },
+	chest: { value: "груди", units: "см", param: "chest" },
+	rightBiceps: {
+		value: "правий біцепс",
+		units: "см",
+		param: "rightBiceps",
+	},
+	leftForearm: {
+		value: "ліве передпліччя",
+		units: "см",
+		param: "leftForearm",
+	},
+	underBust: { value: "під грудьми", units: "см", param: "underBust" },
+	rightForearm: {
+		value: "праве передпліччя",
+		units: "см",
+		param: "rightForearm",
+	},
+	waist: { value: "талія", units: "см", param: "waist" },
+	butt: { value: "сідниці", units: "см", param: "butt" },
+	thigh: { value: "стегна", units: "см", param: "thigh" },
+	leftThigh: { value: "ліве стегно", units: "см", param: "leftThigh" },
+	rightThigh: { value: "праве стегно", units: "см", param: "rightThigh" },
+	leftShin: { value: "ліва гомілка", units: "см", param: "leftShin" },
+	rightShin: { value: "права гомілка", units: "см", param: "rightShin" },
+};
