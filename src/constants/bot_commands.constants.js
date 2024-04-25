@@ -13,13 +13,19 @@ export const BOTCALLBACKCOMMANDS = {
 	historyMeasurements: "historyMeasurements",
 	training: "training",
 	nutritionology: "nutritionology",
-    saveResult:"saveResult",
-    notSaveResult:"notSaveResult",
-    message:"message",
-    waiting_for_confirmation:"waiting_for_confirmation"
+	saveResult: "saveResult",
+	notSaveResult: "notSaveResult",
+	message: "message",
+	waiting_for_confirmation: "waiting_for_confirmation",
+	nutritionology: "nutritionology",
+	genderQuestion: "genderQuestion",
+	male: "male",
+	female: "female",
+    questionsForNutriology:"questionsForNutriology",
+    activityQuestion:"activityQuestion"
 };
 
-export const WDUW = "Чим займемось зараз?"
-export const chooseTheOptions = "Оберіть опцію"
-export const IDK = "Я вас не розумію. Спробуйте ще."
-export const chooseThePartOfBody = "Оберіть частину тіла та запишіть розмір."
+export const WDUW = "Чим займемось зараз?";
+export const chooseTheOptions = "Оберіть опцію";
+export const IDK = "Я вас не розумію. Спробуйте ще.";
+export const chooseThePartOfBody = "Оберіть частину тіла та запишіть розмір.";

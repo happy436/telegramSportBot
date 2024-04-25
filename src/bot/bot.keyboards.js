@@ -5,6 +5,17 @@ import {
 	measurementCommandMiddle,
 	measurementCommandUp,
 } from "./template_keyboards/bot.measure.js";
+import { backButton } from "./template_keyboards/bot.measurementMenu.js";
+import { kcalCalc } from "./template_keyboards/bot.nutritionologyMenu.js";
+import {
+	activityButton,
+	ageButton,
+	chooseActivityButtons,
+	genderButton,
+	manButton,
+	weightButton,
+	womanButton,
+} from "./template_keyboards/bot.nutritionologyQuestion.js";
 import { resultCommand } from "./template_keyboards/bot.result.js";
 
 // * Розділ підтвердження
@@ -51,11 +62,41 @@ export const measurementsMenuKeyboardDown = () => {
 	};
 };
 
-// * result menu
+// * result menu for measurements
 
 export const resultMenu = {
 	reply_markup: {
 		inline_keyboard: resultCommand,
+	},
+};
+
+// * nutritionology Menu
+
+export const nutritionologyMenu = {
+	reply_markup: {
+		inline_keyboard: [[kcalCalc], [backButton]],
+	},
+};
+
+export const nutritionologyQuestions = {
+	reply_markup: {
+		inline_keyboard: [
+			[genderButton, ageButton],
+			[activityButton, weightButton],
+			[backButton],
+		],
+	},
+};
+
+export const genderQuestionMenu = {
+	reply_markup: {
+		inline_keyboard: [[manButton], [womanButton]],
+	},
+};
+
+export const activityQuestionMenu = {
+	reply_markup: {
+		inline_keyboard: [...chooseActivityButtons, [backButton]],
 	},
 };
 

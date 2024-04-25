@@ -23,8 +23,8 @@ const initialState = {
 			[
 				measurementButton,
 				/* trainingButton */
-			]
-			/* [nutritionologyButton], */
+			],
+			[nutritionologyButton],
 		],
 	},
 };

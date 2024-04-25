@@ -23,6 +23,7 @@ const initialState = {
 		[MEASUREMENTS.rightThigh.param]: null,
 		[MEASUREMENTS.leftShin.param]: null,
 		[MEASUREMENTS.rightShin.param]: null,
+
 	},
 };
 

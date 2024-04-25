@@ -6,13 +6,19 @@ import {
 	measurementsMenuKeyboardMiddle,
 	resultMenu,
 	measurementMenuKeyboard,
+	nutritionologyMenu,
+	genderQuestionMenu,
+	nutritionologyQuestions,
+    activityQuestionMenu,
 } from "./bot.keyboards.js";
 import { formatDateToDayMonthYear } from "../utils/common/formatDate.js";
 import { MEASUREMENTS } from "../constants/measurements.contants.js";
 import {
 	changeUserStatus,
 	getChatId,
+	getUserData,
 	getUserStatus,
+	inputGender,
 	logIn,
 } from "../store/user.js";
 import { dispatch, getState } from "../store/createStore.js";
@@ -27,8 +33,9 @@ import {
 import {
 	BOTCALLBACKCOMMANDS,
 	chooseTheOptions,
-    chooseThePartOfBody,
-    IDK,
+	chooseThePartOfBody,
+	IDK,
+	WDUW,
 } from "../constants/bot_commands.constants.js";
 import { updateMessage } from "../utils/updateMessage.js";
 
@@ -46,6 +53,12 @@ const {
 	notSaveResult,
 	message,
 	waiting_for_confirmation,
+	nutritionology,
+	genderQuestion,
+	male,
+	female,
+	questionsForNutriology,
+    activityQuestion
 } = BOTCALLBACKCOMMANDS;
 
 const {
@@ -96,19 +109,60 @@ export const handleInlineButtonForMeasurement = (bot) => async (query) => {
 	await dispatch(logIn(id));
 
 	const userStatus = await dispatch(getUserStatus());
-	const userData = await dispatch(getTodayMeasurements());
+	const userDataMeasurements = await dispatch(getTodayMeasurements());
+	const userData = await dispatch(getUserData());
+	console.log(userData, userStatus);
 
 	switch (userStatus) {
+		case nutritionology:
+			messageText =
+				"Я допоможу тобі розрахувати потрібну кількість ккал для зхуднення дивлячись на твою активність, вік, зріст та вагу.";
+			await bot.editMessageText(messageText, {
+				chat_id: id,
+				message_id: message_id,
+				...nutritionologyMenu,
+			});
+			break;
+		case male:
+		case female:
+			if (status === "female" || status === "male") {
+				await dispatch(inputGender(status));
+			}
+		case activityQuestion:
+            messageText = "Як часто ви тренуетесь?";
+			await bot.editMessageText(messageText, {
+				chat_id: id,
+				message_id: message_id,
+				...activityQuestionMenu,
+			});
+			break;
+		case questionsForNutriology:
+			messageText = "Вкажіть стать, рік, активність, вагу.";
+			await bot.editMessageText(messageText, {
+				chat_id: id,
+				message_id: message_id,
+				...nutritionologyQuestions,
+			});
+
+			break;
+		case genderQuestion:
+			messageText = "Вкажи свою стать!";
+			await bot.editMessageText(messageText, {
+				chat_id: id,
+				message_id: message_id,
+				...genderQuestionMenu,
+			});
+			break;
 		case results:
-			for (const key in userData) {
+			for (const key in userDataMeasurements) {
 				// Проверяем, не является ли значение null
-				if (userData[key] !== null) {
+				if (userDataMeasurements[key] !== null) {
 					// Если значение не null, добавляем его к сообщению
 					const { value, units } = MEASUREMENTS[key];
 
 					messageText += `${
 						value.charAt(0).toUpperCase() + value.slice(1)
-					} ${userData[key]} ${units}\n`;
+					} ${userDataMeasurements[key]} ${units}\n`;
 				}
 			}
 			await bot.editMessageText(messageText, {
@@ -120,16 +174,16 @@ export const handleInlineButtonForMeasurement = (bot) => async (query) => {
 		case saveResult:
 			break;
 		case notSaveResult:
-			for (const key in userData) {
+			for (const key in userDataMeasurements) {
 				// Проверяем, не является ли значение null
-				if (userData[key] !== null) {
+				if (userDataMeasurements[key] !== null) {
 					// Если значение не null, добавляем его к сообщению
 					/* MEASUREMENTS[key] */
 
 					const { value, units } = MEASUREMENTS[key];
 					messageText += `${
 						value.charAt(0).toUpperCase() + value.slice(1)
-					} ${userData[key]} ${units}\n`;
+					} ${userDataMeasurements[key]} ${units}\n`;
 				}
 			}
 			await bot.deleteMessage(id, message_id);
@@ -150,14 +204,11 @@ export const handleInlineButtonForMeasurement = (bot) => async (query) => {
 			});
 			break;
 		case addMeasure:
-			await bot.editMessageText(
-				chooseThePartOfBody,
-				{
-					chat_id: id,
-					message_id: message_id,
-					...measurementsMenuKeyboardUp(),
-				}
-			);
+			await bot.editMessageText(chooseThePartOfBody, {
+				chat_id: id,
+				message_id: message_id,
+				...measurementsMenuKeyboardUp(),
+			});
 			break;
 
 		case backToMainMenu:
@@ -244,16 +295,20 @@ export const onMessage = (bot) => async (msg) => {
 		chat: { id },
 	} = msg;
 	const currentState = dispatch(getUserStatus());
-	const userData = getState();
+	const userDataMeasurements = getState();
 
 	await dispatch(changeUserStatus(message));
 	await dispatch(logIn(id));
 
-	userData.measurements = userData.measurements || {};
+	userDataMeasurements.measurements = userDataMeasurements.measurements || {};
+
 	if (
 		currentState &&
 		currentState.startsWith(
-			waiting_for_confirmation.slice(0, str.lastIndexOf("_") + 1)
+			waiting_for_confirmation.slice(
+				0,
+				waiting_for_confirmation.lastIndexOf("_") + 1
+			)
 		)
 	) {
 		const measurementType = currentState.split("_")[2];
