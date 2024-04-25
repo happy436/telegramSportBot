@@ -9,7 +9,7 @@ import {
 	nutritionologyMenu,
 	genderQuestionMenu,
 	nutritionologyQuestions,
-    activityQuestionMenu,
+	activityQuestionMenu,
 } from "./bot.keyboards.js";
 import { formatDateToDayMonthYear } from "../utils/common/formatDate.js";
 import { MEASUREMENTS } from "../constants/measurements.contants.js";
@@ -19,6 +19,7 @@ import {
 	getUserData,
 	getUserStatus,
 	inputGender,
+	inputSportActivity,
 	logIn,
 } from "../store/user.js";
 import { dispatch, getState } from "../store/createStore.js";
@@ -38,6 +39,7 @@ import {
 	WDUW,
 } from "../constants/bot_commands.constants.js";
 import { updateMessage } from "../utils/updateMessage.js";
+import { activParam } from "./template_keyboards/bot.nutritionologyQuestion.js";
 
 const {
 	results,
@@ -58,7 +60,7 @@ const {
 	male,
 	female,
 	questionsForNutriology,
-    activityQuestion
+	activityQuestion,
 } = BOTCALLBACKCOMMANDS;
 
 const {
@@ -114,6 +116,20 @@ export const handleInlineButtonForMeasurement = (bot) => async (query) => {
 	console.log(userData, userStatus);
 
 	switch (userStatus) {
+        case activParam + 1.2:
+        case activParam + 1.375:
+        case activParam + 1.55:
+        case activParam + 1.725:
+        case activParam + 1.9:
+            const activityParam = Number(userStatus.split("_")[1])
+            await dispatch(inputSportActivity(activityParam))
+            messageText = "Вкажіть стать, рік, активність, вагу.";
+			await bot.editMessageText(messageText, {
+				chat_id: id,
+				message_id: message_id,
+				...nutritionologyQuestions,
+			});
+            break;
 		case nutritionology:
 			messageText =
 				"Я допоможу тобі розрахувати потрібну кількість ккал для зхуднення дивлячись на твою активність, вік, зріст та вагу.";
@@ -123,13 +139,9 @@ export const handleInlineButtonForMeasurement = (bot) => async (query) => {
 				...nutritionologyMenu,
 			});
 			break;
-		case male:
-		case female:
-			if (status === "female" || status === "male") {
-				await dispatch(inputGender(status));
-			}
+
 		case activityQuestion:
-            messageText = "Як часто ви тренуетесь?";
+			messageText = "Як часто ви тренуетесь?";
 			await bot.editMessageText(messageText, {
 				chat_id: id,
 				message_id: message_id,
@@ -143,8 +155,12 @@ export const handleInlineButtonForMeasurement = (bot) => async (query) => {
 				message_id: message_id,
 				...nutritionologyQuestions,
 			});
-
 			break;
+		case male:
+		case female:
+			if (status === "female" || status === "male") {
+				await dispatch(inputGender(status));
+			}
 		case genderQuestion:
 			messageText = "Вкажи свою стать!";
 			await bot.editMessageText(messageText, {
@@ -196,7 +212,7 @@ export const handleInlineButtonForMeasurement = (bot) => async (query) => {
 			break;
 		case measurement:
 			await dispatch(updateMeasurementMenuButtons());
-			console.log(dispatch(getMeasurementMenu()));
+			//console.log(dispatch(getMeasurementMenu()));
 			await bot.editMessageText(chooseTheOptions, {
 				chat_id: id,
 				message_id: message_id,
