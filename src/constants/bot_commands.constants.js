@@ -21,8 +21,10 @@ export const BOTCALLBACKCOMMANDS = {
 	genderQuestion: "genderQuestion",
 	male: "male",
 	female: "female",
-    questionsForNutriology:"questionsForNutriology",
-    activityQuestion:"activityQuestion"
+	questionsForNutriology: "questionsForNutriology",
+	activityQuestion: "activityQuestion",
+	nutritionAge: "nutritionAge",
+	nutritionWeight: "nutritionWeight",
 };
 
 export const WDUW = "Чим займемось зараз?";

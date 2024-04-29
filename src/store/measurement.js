@@ -4,7 +4,7 @@ import { MEASUREMENTS } from "../constants/measurements.contants.js";
 
 const date = formatDateToDayMonthYear(Date.now());
 
-const initialState = {
+/* const initialState = {
 	[date]: {
 		[MEASUREMENTS.weight.param]: null,
 		[MEASUREMENTS.height.param]: null,
@@ -23,38 +23,45 @@ const initialState = {
 		[MEASUREMENTS.rightThigh.param]: null,
 		[MEASUREMENTS.leftShin.param]: null,
 		[MEASUREMENTS.rightShin.param]: null,
-
 	},
-};
+}; */
 
 const measurementSlice = createSlice({
 	name: "measurements",
-	initialState: {
-		entities: initialState,
-		error: null,
-		isLoading: false,
-	},
+	initialState: {},
 	reducers: {
+        //add chatid
 		measurementsRequested: (state) => {
 			state.isLoading = true;
 		},
+        //add chatid
 		measurementsReceived: (state, action) => {
 			state.entities = action.payload;
 			state.isLoading = false;
 		},
+        //add chatid
 		measurementsRequestFailed: (state, action) => {
 			state.error = action.payload;
 			state.isLoading = false;
 		},
 		addMeasurement: (state, action) => {
-			// Получаем данные из action.payload
-			const measurementData = action.payload;
+			const { chatId, data } = action.payload;
 
-			// Обновляем соответствующий объект в состоянии сущностей (entities)
-			state.entities[date] = {
-				...state.entities[date], // Сначала копируем предыдущие данные
-				...measurementData, // Затем обновляем их данными из action.payload
-			};
+			if (!state[chatId]) {
+				state[chatId] = {
+					entities: {
+						[date]: { ...data },
+					},
+				};
+			} else {
+				state[chatId].entities = {
+					...state[chatId].entities,
+					[date]: {
+						...(state[chatId].entities[date] || {}), // Перевіряємо наявність entities[date]
+						...data,
+					},
+				};
+			}
 		},
 	},
 });
@@ -77,10 +84,10 @@ export const loadMeasurements = () => async (dispatch, getState) => {
 	}
 };
 
-export const createMeasurement = (data) => (dispatch) => {
+export const createMeasurement = (chatId, data) => (dispatch, getState) => {
 	dispatch(measurementsRequested());
 	try {
-		dispatch(addMeasurement(data));
+		dispatch(addMeasurement({ chatId, data }));
 	} catch (error) {
 		dispatch(measurementsRequestFailed(error.message));
 	}
@@ -89,10 +96,15 @@ export const createMeasurement = (data) => (dispatch) => {
 export const saveMeasurementsToDataBase =
 	() => async (dispatch, getState) => {};
 
-export const getAllMeasurements = () => (dispatch, getState) =>
-	getState().measurements.entities;
+export const getAllMeasurements = (chatId) => (dispatch, getState) =>
+	getState().measurements[chatId].entities;
 
-export const getTodayMeasurements = () => (dispatch, getState) =>
-	getState().measurements.entities[date];
+export const getTodayMeasurements = (chatId) => (dispatch, getState) => {
+	const measurements = getState().measurements;
+	if (measurements && measurements[chatId] && measurements[chatId].entities) {
+		return measurements[chatId].entities[date];
+	}
+	return {height:null}; // або інше значення за замовчуванням, якщо потрібно
+};
 
 export default measurementsReducer;

@@ -17,4 +17,4 @@ const saveDataOnChat = {
 
 const back = { text: "Назад", callback_data: backToMeasurementMenu };
 
-export const resultCommand = [[saveData], [saveDataOnChat], [back]];
+export const resultCommand = [/* [saveData], */ [saveDataOnChat], [back]];

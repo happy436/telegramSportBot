@@ -3,7 +3,7 @@ import TelegramBot from "node-telegram-bot-api";
 import { config } from "dotenv";
 import { botCommands } from "./constants/bot_commands.constants.js";
 import {
-	handleInlineButtonForMeasurement,
+	handleInlineButtonsAction,
 	onMessage,
 	onStart,
 } from "./bot/bot.handlers.js";
@@ -23,7 +23,7 @@ const start = async () => {
 	await bot.onText(`/start`, onStart(bot));
 
 	//* Слухач
-	await bot.on("callback_query", handleInlineButtonForMeasurement(bot));
+	await bot.on("callback_query", handleInlineButtonsAction(bot));
 
 	//* Слухач усіх повідомлень
 	await bot.on("message", onMessage(bot));

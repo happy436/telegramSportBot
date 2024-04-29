@@ -7,10 +7,16 @@ import {
 	resultButton,
 } from "../bot/template_keyboards/bot.measurementMenu.js";
 import {
-	measurementButton,
-	trainingButton,
-	nutritionologyButton,
-} from "../bot/template_keyboards/bot.startMenu.js";
+	activ,
+	activityButton,
+	age,
+	ageButton,
+	gender,
+	genderButton,
+	weight,
+	weightButton,
+} from "../bot/template_keyboards/bot.nutritionologyQuestion.js";
+import { getTodayMeasurements } from "./measurement.js";
 
 const initialState = {
 	menus: {
@@ -19,12 +25,10 @@ const initialState = {
 			[historyButton],
 			[resultButton, backButton],
 		],
-		mainMenu: [
-			[
-				measurementButton,
-				/* trainingButton */
-			],
-			[nutritionologyButton],
+		nutritionologyQuestionsMenu: [
+			[genderButton, ageButton],
+			[activityButton, weightButton],
+			[backButton],
 		],
 	},
 };
@@ -37,35 +41,97 @@ const buttonSlice = createSlice({
 		changeMeasurementMenu: (state, action) => {
 			state.menus.measurementMenu = action.payload;
 		},
+		changeNutritionologyQuestionsMenu: (state, action) => {
+			state.menus.nutritionologyQuestionsMenu = action.payload;
+		},
 	},
 });
 
 const { reducer: buttonsReducer, actions } = buttonSlice;
 
-const { changeMeasurementMenu } = actions;
+const { changeMeasurementMenu, changeNutritionologyQuestionsMenu } = actions;
 
 export const updateMeasurementMenuButtons =
-	() => async (dispatch, getState) => {
-		const state = getState();
-
-		const date = formatDateToDayMonthYear(Date.now());
-		const measurementData = state.measurements.entities[date];
+	(chatId) => async (dispatch, getState) => {
+		const measurementData = dispatch(getTodayMeasurements(chatId))
 		const isAllNull = Object.values(measurementData).every(
 			(value) => value === null
 		);
 		const newMenu = [
 			[addMeasureButton],
-			!isAllNull ? [historyButton] : [],
+			// !isAllNull ? [historyButton] : [],
 			!isAllNull ? [resultButton, backButton] : [backButton],
 		];
 
 		await dispatch(changeMeasurementMenu(newMenu));
 	};
 
+export const updateMeasurementButtons = () => async (dispatch, getState) => {};
+
+/* export const updateNutritiologyQuestionMenu =
+	(condition,buttonTitle) => async (dispatch, getState) => {
+		const keyboard = getState().buttons.menus.nutritionologyQuestionsMenu;
+		const newMenu = keyboard.map()
+		const conditionTrue = (condition, buttonTitle) => {
+			if (condition === true) {
+				const rowIndex = newMenu.findIndex((row) =>
+					row.some((button) => button.text === buttonTitle)
+				);
+				if (rowIndex !== -1) {
+					const buttonIndex = newMenu[rowIndex].findIndex(
+						(button) => button.text === buttonTitle
+					);
+					if (buttonIndex !== -1) {
+						newMenu[rowIndex][buttonIndex].text =
+							"✅ " + buttonTitle;
+					}
+				}
+				return true;
+			} else {
+				return false;
+			}
+		};
+		if (conditionTrue(condition,buttonTitle)) {
+			await dispatch(changeNutritionologyQuestionsMenu(newMenu));
+		}
+	}; */
+
+export const updateNutritiologyQuestionMenu =
+	(chatId) => async (dispatch, getState) => {
+		const keyboard = getState().buttons.menus.nutritionologyQuestionsMenu;
+		const user = getState().users[chatId];
+		const newMenu = keyboard.map((row) =>
+			row.map((button) => {
+				if (button.text === gender) {
+					if (user.hasOwnProperty("gender")) {
+						return { ...button, text: "✅ " + button.text };
+					}
+				}
+				if (button.text === age) {
+					if (user.hasOwnProperty("age")) {
+						return { ...button, text: "✅ " + button.text };
+					}
+				}
+				if (button.text === activ) {
+					if (user.hasOwnProperty("activity")) {
+						return { ...button, text: "✅ " + button.text };
+					}
+				}
+				if (button.text === weight) {
+					if (user.hasOwnProperty("weight")) {
+						return { ...button, text: "✅ " + button.text };
+					}
+				}
+				return button;
+			})
+		);
+		await dispatch(changeNutritionologyQuestionsMenu(newMenu));
+	};
+
 export const getMeasurementMenu = () => (dispatch, getState) =>
 	getState().buttons.menus.measurementMenu;
 
-export const getMainMenu = () => (dispatch, getState) =>
-	getState().buttons.menus.mainMenu;
+export const getnutritionologyQuestionsMenu = () => (dispatch, getState) =>
+	getState().buttons.menus.nutritionologyQuestionsMenu;
 
 export default buttonsReducer;

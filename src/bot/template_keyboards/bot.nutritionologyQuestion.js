@@ -1,13 +1,13 @@
 import { BOTCALLBACKCOMMANDS } from "../../constants/bot_commands.constants.js";
 
-const { male, female, genderQuestion, activityQuestion } = BOTCALLBACKCOMMANDS;
+const { male, female, genderQuestion, activityQuestion, nutritionAge, nutritionWeight } = BOTCALLBACKCOMMANDS;
 
 const man = "👨 Чоловік 🚹";
 const woman = "👩 Жінка 🚺";
-const gender = "Стать";
-const age = "Вік";
-const activ = "Активність";
-const weight = "Вага";
+export const gender = "Стать";
+export const age = "Вік";
+export const activ = "Активність";
+export const weight = "Вага";
 export const activParam = "activityParam_"
 
 // Определение уровня активности
@@ -27,6 +27,6 @@ export const chooseActivityButtons = activityLevel.map((b) => [
 	{ text: b.text, callback_data: b.value },
 ]);
 export const genderButton = { text: gender, callback_data: genderQuestion };
-export const ageButton = { text: age, callback_data: "a" };
+export const ageButton = { text: age, callback_data: nutritionAge };
 export const activityButton = { text: activ, callback_data: activityQuestion };
-export const weightButton = { text: weight, callback_data: "a" };
+export const weightButton = { text: weight, callback_data: nutritionWeight };

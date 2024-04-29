@@ -1,4 +1,4 @@
-import { getMainMenu, getMeasurementMenu } from "../store/buttons.js";
+import { getMeasurementMenu, getnutritionologyQuestionsMenu } from "../store/buttons.js";
 import { dispatch } from "../store/createStore.js";
 import {
 	measurementCommandDown,
@@ -8,15 +8,15 @@ import {
 import { backButton } from "./template_keyboards/bot.measurementMenu.js";
 import { kcalCalc } from "./template_keyboards/bot.nutritionologyMenu.js";
 import {
-	activityButton,
-	ageButton,
 	chooseActivityButtons,
-	genderButton,
 	manButton,
-	weightButton,
 	womanButton,
 } from "./template_keyboards/bot.nutritionologyQuestion.js";
 import { resultCommand } from "./template_keyboards/bot.result.js";
+import {
+	measurementButton,
+	nutritionologyButton,
+} from "./template_keyboards/bot.startMenu.js";
 
 // * Розділ підтвердження
 
@@ -26,7 +26,13 @@ import { resultCommand } from "./template_keyboards/bot.result.js";
 
 export const startMenuKeyboard = {
 	reply_markup: {
-		inline_keyboard: dispatch(getMainMenu()),
+		inline_keyboard: [
+			[
+				measurementButton,
+				/* trainingButton */
+			],
+			[nutritionologyButton],
+		],
 	},
 };
 
@@ -78,15 +84,11 @@ export const nutritionologyMenu = {
 	},
 };
 
-export const nutritionologyQuestions = {
+export const nutritionologyQuestions = () => {return {
 	reply_markup: {
-		inline_keyboard: [
-			[genderButton, ageButton],
-			[activityButton, weightButton],
-			[backButton],
-		],
+		inline_keyboard: dispatch(getnutritionologyQuestionsMenu()),
 	},
-};
+}}
 
 export const genderQuestionMenu = {
 	reply_markup: {
