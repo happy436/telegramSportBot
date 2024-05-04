@@ -32,9 +32,9 @@ export const calcKcal = (gender, weight, height, age, activityLevel) => {
         bmr * activityLevel - bmr * activityLevel * 0.15;
 
     // Расчет потребления БЖУ (белки, жиры, углеводы)
-    const protein = (result * 0.3) // 30% от калорий
-    const fat = (result * 0.3) // 30% от калорий
-    const carbohydrate = (result * 0.4) // 40% от калорий
+    const protein = (result * 0.2) / 4 // 30% от калорий
+    const fat = (result * 0.25) / 9 // 30% от калорий
+    const carbohydrate = (result - ((result * 0.2) + (result * 0.25))) / 4 // 40% от калорий
 
     return {
         calories: result.toFixed(0),
