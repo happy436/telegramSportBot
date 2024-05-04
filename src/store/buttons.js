@@ -68,34 +68,6 @@ export const updateMeasurementMenuButtons =
 
 export const updateMeasurementButtons = () => async (dispatch, getState) => {};
 
-/* export const updateNutritiologyQuestionMenu =
-	(condition,buttonTitle) => async (dispatch, getState) => {
-		const keyboard = getState().buttons.menus.nutritionologyQuestionsMenu;
-		const newMenu = keyboard.map()
-		const conditionTrue = (condition, buttonTitle) => {
-			if (condition === true) {
-				const rowIndex = newMenu.findIndex((row) =>
-					row.some((button) => button.text === buttonTitle)
-				);
-				if (rowIndex !== -1) {
-					const buttonIndex = newMenu[rowIndex].findIndex(
-						(button) => button.text === buttonTitle
-					);
-					if (buttonIndex !== -1) {
-						newMenu[rowIndex][buttonIndex].text =
-							"✅ " + buttonTitle;
-					}
-				}
-				return true;
-			} else {
-				return false;
-			}
-		};
-		if (conditionTrue(condition,buttonTitle)) {
-			await dispatch(changeNutritionologyQuestionsMenu(newMenu));
-		}
-	}; */
-
 export const updateNutritiologyQuestionMenu =
 	(chatId) => async (dispatch, getState) => {
 		const keyboard = getState().buttons.menus.nutritionologyQuestionsMenu;
@@ -108,7 +80,7 @@ export const updateNutritiologyQuestionMenu =
 					}
 				}
 				if (button.text === age) {
-					if (user.hasOwnProperty("age")) {
+					if (user.hasOwnProperty("ageCalcKcal")) {
 						return { ...button, text: "✅ " + button.text };
 					}
 				}
@@ -118,7 +90,7 @@ export const updateNutritiologyQuestionMenu =
 					}
 				}
 				if (button.text === weight) {
-					if (user.hasOwnProperty("weight")) {
+					if (user.hasOwnProperty("weightCalcKcal")) {
 						return { ...button, text: "✅ " + button.text };
 					}
 				}

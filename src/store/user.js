@@ -32,25 +32,33 @@ const usersSlice = createSlice({
 				username,
 			};
 		},
-		changeGender: (state, action) => {
-			const { chatId, gender } = action.payload;
-			state[chatId].gender = gender;
-		},
-		sportActivity: (state, action) => {
-			const { chatId, activityParam } = action.payload;
-			state[chatId].activity = activityParam;
-		},
+		addData: (state, action) => {
+			const { chatId, data } = action.payload;
+			if (!state[chatId]) {
+				state[chatId] = { ...data };
+			} else {
+				state[chatId] = {
+					...(state[chatId] || {}), // Перевіряємо наявність entities[date]
+					...data,
+				};
+			}
+		}
 	},
 });
 
 const { reducer: usersReducer, actions } = usersSlice;
-const { userStatus, chatId, userError, changeGender, sportActivity } = actions;
+const {
+	userStatus,
+	chatId,
+	userError,
+	addData,
+} = actions;
 
 export const changeUserStatus = (payload) => (dispatch, getState) => {
 	try {
 		dispatch(userStatus(payload));
 	} catch (error) {
-		dispatch(userError(error.message));
+		dispatch(userError({ id: payload.id, error: error.message }));
 	}
 };
 
@@ -62,19 +70,11 @@ export const logIn = (payload) => async (dispatch) => {
 	}
 };
 
-export const inputGender = (payload) => (dispatch) => {
+export const inputData = (payload) => (dispatch) => {
 	try {
-		dispatch(changeGender(payload));
+		dispatch(addData(payload));
 	} catch (error) {
-		dispatch(userError(error.message));
-	}
-};
-
-export const inputSportActivity = (payload) => (dispatch) => {
-	try {
-		dispatch(sportActivity(payload));
-	} catch (error) {
-		dispatch(userError(error.message));
+		dispatch(userError({ id: payload.id, error: error.message }));
 	}
 };
 

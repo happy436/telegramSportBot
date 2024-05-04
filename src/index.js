@@ -4,10 +4,10 @@ import { config } from "dotenv";
 import { botCommands } from "./constants/bot_commands.constants.js";
 import {
 	handleInlineButtonsAction,
-	onMessage,
 	onStart,
 } from "./bot/bot.handlers.js";
 import mongoose from "mongoose";
+import { onMessage } from "./bot/bot.onMessage.js";
 
 config();
 

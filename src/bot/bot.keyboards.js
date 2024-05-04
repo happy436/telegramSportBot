@@ -98,7 +98,7 @@ export const genderQuestionMenu = {
 
 export const activityQuestionMenu = {
 	reply_markup: {
-		inline_keyboard: [...chooseActivityButtons, [backButton]],
+		inline_keyboard: [...chooseActivityButtons],
 	},
 };
 

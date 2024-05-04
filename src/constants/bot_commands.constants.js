@@ -23,8 +23,8 @@ export const BOTCALLBACKCOMMANDS = {
 	female: "female",
 	questionsForNutriology: "questionsForNutriology",
 	activityQuestion: "activityQuestion",
-	nutritionAge: "nutritionAge",
-	nutritionWeight: "nutritionWeight",
+    ageCalcKcal:"ageCalcKcal",
+    weightCalcKcal:"weightCalcKcal"
 };
 
 export const WDUW = "Чим займемось зараз?";

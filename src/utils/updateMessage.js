@@ -1,3 +1,6 @@
+import { dispatch, getState } from "../store/createStore.js";
+import { inputData } from "../store/user.js";
+
 export const updateMessage = async (bot, query, messageText,buttons) => {
     const {
 		message: {
@@ -13,6 +16,12 @@ export const updateMessage = async (bot, query, messageText,buttons) => {
             ...buttons,
         });
     } else {
+        dispatch(
+            inputData({
+                chatId: id,
+                data: { messageId: message_id },
+            })
+        );
         await bot.deleteMessage(id, message_id);
         await bot.sendMessage(
             id,

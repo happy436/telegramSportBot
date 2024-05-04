@@ -1,4 +1,4 @@
-const nutrition1 = (gender, weight, height, age, activityLevel) => {
+export const calcKcal = (gender, weight, height, age, activityLevel) => {
     // Проверка на корректность значения пола
     const isWoman =
         gender.toLowerCase() === "woman" || gender.toLowerCase() === "female";

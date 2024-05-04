@@ -4,4 +4,4 @@ const { genderQuestion } = BOTCALLBACKCOMMANDS;
 
 const kcalTitle = "🧮 Розрахунок Ккал";
 
-export const kcalCalc = { text: kcalTitle, callback_data: "questionsForNutriology" };
+export const kcalCalc = { text: kcalTitle, callback_data: genderQuestion };
